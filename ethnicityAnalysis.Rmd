@@ -15,6 +15,8 @@ library(clipr)
 
 
 ```{r}
+#source: https://data.geods.ac.uk/dataset/modelled-ethnicity-proportions-lad-geography
+
 ethnicity2023 <- read.csv("MEP_oslaua_2023.csv") %>%
   rename(area = oslaua, abd2023 = abd) #renames column to indicate ethnicity in 2023
 
