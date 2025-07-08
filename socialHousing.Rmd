@@ -20,6 +20,8 @@ library(clipr)
 ```
 
 ```{r}
+#source: https://www.gov.uk/government/statistical-data-sets/live-tables-on-dwelling-stock-including-vacants
+
 #selecting most recent set of data
 totalSocial <- read_excel("LT_100.xlsx", sheet = "2023", skip = 65) %>% 
   #cleaning headers of sheet
