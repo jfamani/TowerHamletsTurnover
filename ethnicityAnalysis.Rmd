@@ -1,0 +1,44 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#install.packages("readxl")
+library(readxl)
+
+#install.packages("tidyverse")
+library(tidyverse)
+
+#install.packages("writexl")
+library(writexl)
+
+#install.packages("openxlsx")
+library(openxlsx)
+
+# Load the clipr package
+library(clipr)
+```
+
+
+```{r}
+ethnicity2023 <- read.csv("MEP_oslaua_2023.csv") %>%
+  rename(area = oslaua, abd2023 = abd) #filters 
+
+ethnicity1997 <- read.csv("MEP_oslaua_1997.csv") %>%
+  rename(area = oslaua, abd1997 = abd)
+
+regionData <- read_csv("region2024.csv") %>% 
+  rename(area = LAD24CD)
+```
+
+```{r}
+jointData <- ethnicity2023 %>%
+  left_join(regionData %>% select(area, LAD24NM), by = "area") %>%
+  left_join(ethnicity1997 %>% select (area, abd1997), by = "area") %>%
+  select(LAD24NM, area, abd1997,abd2023) %>%
+  mutate(abd2023 = abd2023 * 100) %>%
+  mutate(abd1997 = abd1997 * 100) %>%
+  write_clip()
+  
+```
+```
