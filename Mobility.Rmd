@@ -35,6 +35,10 @@ library(purrr)
 
 #reading sheet
 ```{r}
+#source: https://data.geods.ac.uk/dataset/residential-mobility-index,
+#source: https://www.data.gov.uk/dataset/cbaf0333-3548-4e42-8a8f-6dc5376bc360/local-authority-districts-december-2024-names-and-codes-in-the-uk 
+
+
 mobility <- read.csv("mobility.csv")
 regionData <- read_csv("region2024.csv") %>% 
   rename(area = LAD24CD)
