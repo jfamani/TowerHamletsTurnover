@@ -20,9 +20,13 @@ library(clipr)
 ```
 
 ```{r}
-totalSocial <- read_excel("LT_100.xlsx", sheet = "2023", skip = 65) %>% #selecting most recent set of data
-  rename(dclgCode = ...1, onsCode = ...2, localAuthority = `390700.0`, private = `426419.0`, otherPublic = `3451.0`, privateSector = `2969640.0`, total = `3790210.0`) %>% #cleaning headers of sheet
-  slice_head(n = 33) %>% #removes rest of data so it only includes London Boroughs
+#selecting most recent set of data
+totalSocial <- read_excel("LT_100.xlsx", sheet = "2023", skip = 65) %>% 
+  #cleaning headers of sheet
+  rename(dclgCode = ...1, onsCode = ...2, localAuthority = `390700.0`, private = `426419.0`, otherPublic = `3451.0`, privateSector = `2969640.0`, total = `3790210.0`) %>% 
+  #removes rest of data so it only includes London Boroughs  
+  slice_head(n = 33) %>% 
   select(onsCode, "London Boroughs", private) %>%
-  arrange(desc(private)) #arrange in descending order 
+  #arrange in descending order
+  arrange(desc(private))  
 ```
