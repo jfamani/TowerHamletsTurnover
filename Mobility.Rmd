@@ -1,0 +1,79 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#install.packages("readxl")
+library(readxl)
+
+#install.packages("tidyverse")
+library(tidyverse)
+
+#install.packages('stringr')
+library(stringr)
+
+#install.packages("readODS")
+#library(readODS)
+
+#install.packages("writexl")
+library(writexl)
+
+#install.packages("openxlsx")
+library(openxlsx)
+
+#install.packages("googlesheets4")
+
+library(googlesheets4)
+library(googledrive)
+
+# Load the clipr package
+library(clipr)
+
+library(purrr)
+```
+
+
+
+```{r}
+mobility <- read.csv("mobility.csv")
+regionData <- read_csv("region2024.csv") %>% 
+  rename(area = LAD24CD)
+
+mobilityNeigh <- read.csv("hh_churn_lsoa11_2023.csv") %>%
+  rename(LSOA21CD = area)
+msoaData <- read.csv("msoaData.csv")
+
+lsoaData <- read.csv("lsoaData.csv")
+
+#trial <- read_excel("sapelsoasyoa20192022.xlsx", sheet = 5)
+```
+
+
+```{r}
+jointData <- mobility %>%
+  left_join(regionData %>% select(area, LAD24NM), by = "area") %>%
+  select(LAD24NM, area, chn2021) %>%
+  mutate(chn2021 = chn2021 * 100)
+
+#msoaJointData <- mobilityNeigh %>%
+ # left_join(msoaData %>% select(MSOA21CD, MSOA21NM, WD24NM), by = "MSOA21CD") %>%
+  #select("MSOA21CD", "MSOA21NM", "WD24NM")
+
+lsoaJointData <- mobilityNeigh %>%
+  left_join(lsoaData %>% select(LSOA21CD, LSOA21NM), by = "LSOA21CD") %>%
+  select("LSOA21CD", "LSOA21NM", chn2021) %>% 
+  filter(str_starts(LSOA21NM, "Tower Hamlets")) %>%
+  arrange(desc(chn2021)) %>%
+  write_clip()
+
+write_clip(lsoaJointData )
+ 
+
+           
+
+  
+
+            
+            
+```
+
