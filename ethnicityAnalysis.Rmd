@@ -9,12 +9,6 @@ library(readxl)
 #install.packages("tidyverse")
 library(tidyverse)
 
-#install.packages("writexl")
-library(writexl)
-
-#install.packages("openxlsx")
-library(openxlsx)
-
 # Load the clipr package
 library(clipr)
 ```
@@ -22,23 +16,22 @@ library(clipr)
 
 ```{r}
 ethnicity2023 <- read.csv("MEP_oslaua_2023.csv") %>%
-  rename(area = oslaua, abd2023 = abd) #filters 
+  rename(area = oslaua, abd2023 = abd) #renames column to indicate ethnicity in 2023
 
 ethnicity1997 <- read.csv("MEP_oslaua_1997.csv") %>%
-  rename(area = oslaua, abd1997 = abd)
+  rename(area = oslaua, abd1997 = abd) #renames column to indicate ethnicity in 1997
 
 regionData <- read_csv("region2024.csv") %>% 
-  rename(area = LAD24CD)
+  rename(area = LAD24CD) #reads a sheet to get names of each local authority area
 ```
 
 ```{r}
 jointData <- ethnicity2023 %>%
-  left_join(regionData %>% select(area, LAD24NM), by = "area") %>%
-  left_join(ethnicity1997 %>% select (area, abd1997), by = "area") %>%
-  select(LAD24NM, area, abd1997,abd2023) %>%
+  left_join(regionData %>% select(area, LAD24NM), by = "area") %>% #combines the 2023 data with local authority name
+  left_join(ethnicity1997 %>% select (area, abd1997), by = "area") %>% #combines 1997 data with 2023 data and local authority name
+  select(LAD24NM, area, abd1997,abd2023) %>% #selects columns to be used in map
   mutate(abd2023 = abd2023 * 100) %>%
-  mutate(abd1997 = abd1997 * 100) %>%
+  mutate(abd1997 = abd1997 * 100) %>% #converts into a percentage 
   write_clip()
-  
 ```
 ```
