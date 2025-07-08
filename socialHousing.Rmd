@@ -1,0 +1,60 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+```{r}
+#install.packages("readxl")
+library(readxl)
+
+#install.packages("tidyverse")
+library(tidyverse)
+
+#install.packages('stringr')
+library(stringr)
+
+#install.packages("readODS")
+#library(readODS)
+
+#install.packages("writexl")
+library(writexl)
+
+#install.packages("openxlsx")
+library(openxlsx)
+
+#install.packages("googlesheets4")
+
+library(googlesheets4)
+library(googledrive)
+
+# Load the clipr package
+library(clipr)
+
+library(purrr)
+```
+
+```{r}
+authorityHousing <- read_excel("Local_Authority_Housing_Statistics_2022_23.xlsx", sheet = "C", skip = 208) %>%
+  slice(-1) %>%
+  rename(onsCode = E12000007 , "London Boroughs" = ...3, householdWaitingList = `323637`) %>%
+  select(onsCode, "London Boroughs", householdWaitingList) %>%
+  slice_head(n = 33) 
+
+authorityHousing24 <- read_excel("Local_Authority_Housing_Statistics_2023_24.xlsx", sheet = "C", skip = 198) %>%
+  slice(-1) %>%
+  rename(onsCode = E12000007 , "London Boroughs" = ...3, householdWaitingList = `336366`) %>%
+  select(onsCode, "London Boroughs", householdWaitingList) %>%
+  mutate(householdWaitingList = as.numeric(householdWaitingList)) %>%
+  slice_head(n = 33) 
+
+totalSocial <- read_excel("LT_100.xlsx", sheet = "2023", skip = 65) %>%
+  rename(dclgCode = ...1, onsCode = ...2, localAuthority = `390700.0`, private = `426419.0`, otherPublic = `3451.0`, privateSector = `2969640.0`, total = `3790210.0`) %>%
+    slice_head(n = 33) %>% 
+  mutate(socialHousing = localAuthority + private) %>%
+  mutate(percPrivate = (private/socialHousing)*100) %>%
+  select(1:5, socialHousing, percPrivate, everything()) %>%
+  arrange(desc(socialHousing)) 
+  
+
+
+write_clip(totalSocial)
+```
